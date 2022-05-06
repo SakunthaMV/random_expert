@@ -23,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   int _minValueInteger = 0;
   int _maxValueInteger = 100;
   int _items = 1;
+  bool _repetitionChecked = true;
+  bool _sumChecked = false;
 
   TextEditingController _minValueController = TextEditingController(text: '0');
   TextEditingController _maxValueController = TextEditingController(text: '100');
@@ -398,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 60,
                       margin: EdgeInsets.symmetric(vertical: 10),
-                      padding: EdgeInsets.only(left: 20,right: 15),
+                      padding: EdgeInsets.only(left: 20, right: 15),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 224, 250, 153),
                         borderRadius: BorderRadius.circular(30),
@@ -407,7 +409,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.black.withOpacity(0.35),
                             blurRadius: 4,
                             spreadRadius: -1,
-                            offset: Offset(0,3),
+                            offset: Offset(0, 3),
                           ),
                         ],
                       ),
@@ -424,14 +426,14 @@ class _HomePageState extends State<HomePage> {
                                 Shadow(
                                   color: Colors.black.withOpacity(0.4),
                                   blurRadius: 4.0,
-                                  offset: Offset(0.5,1),
+                                  offset: Offset(0.5, 1),
                                 ),
                               ],
                             ),
                           ),
                           Container(
                             height: 30,
-                            width: width*0.3,
+                            width: width * 0.3,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(15),
@@ -445,12 +447,12 @@ class _HomePageState extends State<HomePage> {
                                 LengthLimitingTextInputFormatter(8),
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              onTap: (){
+                              onTap: () {
                                 setState(() {
                                   _minValueController.text = '';
                                 });
                               },
-                              onChanged: (text){
+                              onChanged: (text) {
                                 setState(() {
                                   _minValueInteger = int.parse(text);
                                 });
@@ -462,9 +464,18 @@ class _HomePageState extends State<HomePage> {
                                 if (text.isEmpty) {
                                   setState(() {
                                     _minValueController.text = '0';
-                                    _maxValueInteger = 0;
+                                    _minValueInteger = 0;
                                   });
                                 }
+                              },
+                              validator: (text) {
+                                if (text == null || text.isEmpty){
+                                  setState(() {
+                                    _minValueController.text = '0';
+                                    _minValueInteger = 0;
+                                  });
+                                }
+                                return null;
                               },
                               style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w300,
@@ -473,9 +484,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(bottom: 15)
-                              ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(bottom: 15)),
                             ),
                           ),
                         ],
@@ -484,7 +494,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 60,
                       margin: EdgeInsets.symmetric(vertical: 10),
-                      padding: EdgeInsets.only(left: 20,right: 15),
+                      padding: EdgeInsets.only(left: 20, right: 15),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 224, 250, 153),
                         borderRadius: BorderRadius.circular(30),
@@ -493,7 +503,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.black.withOpacity(0.35),
                             blurRadius: 4,
                             spreadRadius: -1,
-                            offset: Offset(0,3),
+                            offset: Offset(0, 3),
                           ),
                         ],
                       ),
@@ -510,14 +520,14 @@ class _HomePageState extends State<HomePage> {
                                 Shadow(
                                   color: Colors.black.withOpacity(0.4),
                                   blurRadius: 4.0,
-                                  offset: Offset(0.5,1),
+                                  offset: Offset(0.5, 1),
                                 ),
                               ],
                             ),
                           ),
                           Container(
                             height: 30,
-                            width: width*0.3,
+                            width: width * 0.3,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(15),
@@ -531,12 +541,12 @@ class _HomePageState extends State<HomePage> {
                                 LengthLimitingTextInputFormatter(8),
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              onTap: (){
+                              onTap: () {
                                 setState(() {
                                   _maxValueController.text = '';
                                 });
                               },
-                              onChanged: (text){
+                              onChanged: (text) {
                                 setState(() {
                                   _maxValueInteger = int.parse(text);
                                 });
@@ -550,6 +560,15 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 }
                               },
+                              validator: (text) {
+                                if (text == null || text.isEmpty){
+                                  setState(() {
+                                    _maxValueController.text = '100';
+                                    _maxValueInteger = 100;
+                                  });
+                                }
+                                return null;
+                              },
                               style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 20,
@@ -558,8 +577,7 @@ class _HomePageState extends State<HomePage> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(bottom: 15)
-                              ),
+                                  contentPadding: EdgeInsets.only(bottom: 15)),
                             ),
                           ),
                         ],
@@ -568,7 +586,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 80,
                       margin: EdgeInsets.symmetric(vertical: 10),
-                      padding: EdgeInsets.only(left: 20,right: 15),
+                      padding: EdgeInsets.only(left: 20, right: 15),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 224, 250, 153),
                         borderRadius: BorderRadius.circular(40),
@@ -577,7 +595,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.black.withOpacity(0.35),
                             blurRadius: 4,
                             spreadRadius: -1,
-                            offset: Offset(0,3),
+                            offset: Offset(0, 3),
                           ),
                         ],
                       ),
@@ -585,7 +603,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: width*0.5,
+                            width: width * 0.5,
                             child: Text(
                               'NUMBER OF RANDOM ITEMS',
                               style: GoogleFonts.openSans(
@@ -596,7 +614,7 @@ class _HomePageState extends State<HomePage> {
                                   Shadow(
                                     color: Colors.black.withOpacity(0.4),
                                     blurRadius: 4.0,
-                                    offset: Offset(0.5,1),
+                                    offset: Offset(0.5, 1),
                                   ),
                                 ],
                               ),
@@ -604,26 +622,26 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Container(
                             height: 30,
-                            width: width*0.3,
+                            width: width * 0.3,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: TextFormField(
                               textAlign: TextAlign.center,
-                              textInputAction: TextInputAction.next,
+                              textInputAction: TextInputAction.done,
                               controller: _itemsController,
                               keyboardType: TextInputType.number,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(3),
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              onTap: (){
+                              onTap: () {
                                 setState(() {
                                   _itemsController.text = '';
                                 });
                               },
-                              onChanged: (text){
+                              onChanged: (text) {
                                 setState(() {
                                   _items = int.parse(text);
                                 });
@@ -636,6 +654,20 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 }
                               },
+                              validator: (text) {
+                                if (text == null || text.isEmpty){
+                                  setState(() {
+                                    _itemsController.text = '1';
+                                    _items = 1;
+                                  });
+                                } else if (text == '0') {
+                                  setState(() {
+                                    _itemsController.text = '1';
+                                    _items = 1;
+                                  });
+                                }
+                                return null;
+                              },
                               style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 20,
@@ -643,8 +675,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(bottom: 15)
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(bottom: 15),
                               ),
                             ),
                           ),
@@ -652,9 +684,115 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Container(
-                      height: 100,
-                      color: Colors.amber,
+                      height: 80,
                       margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.only(left: 20, right: 15),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 224, 250, 153),
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.35),
+                            blurRadius: 4,
+                            spreadRadius: -1,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'REPETITION',
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      blurRadius: 4.0,
+                                      offset: Offset(0.5, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 30,
+                                width: width * 0.3,
+                                child: Transform.scale(
+                                  scale: 1.4,
+                                  child: Checkbox(
+                                    value: _repetitionChecked,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _repetitionChecked = value!;
+                                      });
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    activeColor: Colors.white,
+                                    checkColor: Colors.black,
+                                    side: BorderSide(
+                                      color: Colors.black,
+                                      width: 2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'SHOW SUM',
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      blurRadius: 4.0,
+                                      offset: Offset(0.5, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 30,
+                                width: width * 0.3,
+                                child: Transform.scale(
+                                  scale: 1.4,
+                                  child: Checkbox(
+                                    value: _sumChecked,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _sumChecked = value!;
+                                      });
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    activeColor: Colors.white,
+                                    checkColor: Colors.black,
+                                    side: BorderSide(
+                                      color: Colors.black,
+                                      width: 2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -749,9 +887,9 @@ class _HomePageState extends State<HomePage> {
                       letterSpacing: 1.2,
                       shadows: [
                         Shadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 7.0,
-                            offset: Offset(1,2),
+                          color: Colors.black.withOpacity(0.5),
+                          blurRadius: 7.0,
+                          offset: Offset(1, 2),
                         )
                       ],
                     ),
@@ -781,15 +919,15 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     _type,
                     style: GoogleFonts.openSans(
-                        fontSize: 36,
-                        color: Color.fromARGB(255, 190, 241, 136),
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.2,
+                      fontSize: 36,
+                      color: Color.fromARGB(255, 190, 241, 136),
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1.2,
                       shadows: [
                         Shadow(
                           color: Colors.black.withOpacity(0.4),
                           blurRadius: 5.0,
-                          offset: Offset(1,2),
+                          offset: Offset(1, 2),
                         )
                       ],
                     ),
@@ -826,7 +964,13 @@ class _HomePageState extends State<HomePage> {
               margin: EdgeInsets.only(top: height * 0.32 - 40, right: 40),
               child: ElevatedButton(
                 onPressed: () {
-                  print(_minValueInteger);
+                  final isValid = dataFormKey.currentState!.validate();
+                  if (isValid) {
+                    print(_minValueInteger);
+                    print(_maxValueInteger);
+                    print(_items);
+                    print(_repetitionChecked);
+                  }
                 },
                 child: Icon(
                   Icons.play_arrow,
