@@ -21,10 +21,12 @@ class _HomePageState extends State<HomePage> {
   Color _firstDotColor = Colors.white;
   Color _secondDotColor = Color.fromARGB(255, 108, 143, 117);
   int _minValueInteger = 0;
+  int _maxValueInteger = 100;
+  int _items = 1;
 
   TextEditingController _minValueController = TextEditingController(text: '0');
-  TextEditingController _maxValueController = TextEditingController();
-  TextEditingController _itemsController = TextEditingController();
+  TextEditingController _maxValueController = TextEditingController(text: '100');
+  TextEditingController _itemsController = TextEditingController(text: '1');
   TextEditingController _decimalController = TextEditingController();
 
   @override
@@ -453,10 +455,14 @@ class _HomePageState extends State<HomePage> {
                                   _minValueInteger = int.parse(text);
                                 });
                               },
-                              validator: (text) {
-                                if (text == null || text.isEmpty) {
+                              onFieldSubmitted: (text) {
+                                setState(() {
+                                  _maxValueController.text = '';
+                                });
+                                if (text.isEmpty) {
                                   setState(() {
                                     _minValueController.text = '0';
+                                    _maxValueInteger = 0;
                                   });
                                 }
                               },
@@ -476,14 +482,174 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Container(
-                      height: 100,
+                      height: 60,
                       margin: EdgeInsets.symmetric(vertical: 10),
-                      color: Colors.amber,
+                      padding: EdgeInsets.only(left: 20,right: 15),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 224, 250, 153),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.35),
+                            blurRadius: 4,
+                            spreadRadius: -1,
+                            offset: Offset(0,3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'MAX VALUE',
+                            style: GoogleFonts.openSans(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              color: Colors.black,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 4.0,
+                                  offset: Offset(0.5,1),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 30,
+                            width: width*0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              textInputAction: TextInputAction.next,
+                              controller: _maxValueController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(8),
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              onTap: (){
+                                setState(() {
+                                  _maxValueController.text = '';
+                                });
+                              },
+                              onChanged: (text){
+                                setState(() {
+                                  _maxValueInteger = int.parse(text);
+                                });
+                              },
+                              onFieldSubmitted: (text) {
+                                _itemsController.text = '';
+                                if (text.isEmpty) {
+                                  setState(() {
+                                    _maxValueController.text = '100';
+                                    _maxValueInteger = 100;
+                                  });
+                                }
+                              },
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(bottom: 15)
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
-                      height: 100,
-                      color: Colors.amber,
+                      height: 80,
                       margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.only(left: 20,right: 15),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 224, 250, 153),
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.35),
+                            blurRadius: 4,
+                            spreadRadius: -1,
+                            offset: Offset(0,3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: width*0.5,
+                            child: Text(
+                              'NUMBER OF RANDOM ITEMS',
+                              style: GoogleFonts.openSans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                color: Colors.black,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    blurRadius: 4.0,
+                                    offset: Offset(0.5,1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 30,
+                            width: width*0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              textInputAction: TextInputAction.next,
+                              controller: _itemsController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(3),
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              onTap: (){
+                                setState(() {
+                                  _itemsController.text = '';
+                                });
+                              },
+                              onChanged: (text){
+                                setState(() {
+                                  _items = int.parse(text);
+                                });
+                              },
+                              onFieldSubmitted: (text) {
+                                if (text.isEmpty) {
+                                  setState(() {
+                                    _itemsController.text = '1';
+                                    _items = 1;
+                                  });
+                                }
+                              },
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(bottom: 15)
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       height: 100,
