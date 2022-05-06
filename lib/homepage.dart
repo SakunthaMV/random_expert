@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 
@@ -12,11 +13,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String type = 'INTEGER';
-  String buttonType = 'Decimal';
-  bool integer = true;
-  Color firstDotColor = Colors.white;
-  Color secondDotColor = Color.fromARGB(255, 108, 143, 117);
+  final dataFormKey = GlobalKey<FormState>();
+
+  String _type = 'INTEGER';
+  String _buttonType = 'Decimal';
+  bool _integer = true;
+  Color _firstDotColor = Colors.white;
+  Color _secondDotColor = Color.fromARGB(255, 108, 143, 117);
+  int _minValueInteger = 0;
+
+  TextEditingController _minValueController = TextEditingController(text: '0');
+  TextEditingController _maxValueController = TextEditingController();
+  TextEditingController _itemsController = TextEditingController();
+  TextEditingController _decimalController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,345 +36,464 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         alignment: AlignmentDirectional.topCenter,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ListView(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: height * 0.35),
-                child: Stack(
-                  alignment: AlignmentDirectional.topCenter,
-                  children: [
-                    Container(
-                      height: height * 0.55,
-                      width: 7,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 212, 226, 190),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: height * 0.28),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              children: [
-                                Transform.rotate(
-                                  angle: math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Transform.rotate(
-                                  angle: -math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Stack(
-                              children: [
-                                Transform.rotate(
-                                  angle: math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Transform.rotate(
-                                  angle: -math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: height * 0.25),
-                child: Stack(
-                  alignment: AlignmentDirectional.topCenter,
-                  children: [
-                    Container(
-                      height: height * 0.55,
-                      width: 7,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 212, 226, 190),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 0),
-                        child: SizedBox(
-                          height: 14,
-                          child: SimpleShadow(
-                            child: Image.asset('assets/Infinity_Icon.png'),
-                            opacity: 0.7,
-                            color: Colors.black.withOpacity(0.2),
-                            offset: Offset(0,0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: height * 0.35),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        Container(
+                          height: height * 0.55,
+                          width: 7,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 212, 226, 190),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: height * 0.15),
-                child: Stack(
-                  alignment: AlignmentDirectional.topCenter,
-                  children: [
-                    Container(
-                      height: height * 0.55,
-                      width: 7,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 212, 226, 190),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: height * 0.4),
-                        child: Stack(
-                          children: [
-                            Transform.rotate(
-                              angle: math.pi / 4,
-                              child: Container(
-                                height: height * 0.035,
-                                width: 5,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 171, 211, 148),
-                                  borderRadius: BorderRadius.circular(1),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      offset: Offset(0, 0),
-                                      blurRadius: 0.8,
-                                      spreadRadius: 0.8,
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height * 0.28),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Transform.rotate(
+                                      angle: math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.rotate(
+                                      angle: -math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                            Transform.rotate(
-                              angle: -math.pi / 4,
-                              child: Container(
-                                height: height * 0.035,
-                                width: 5,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 171, 211, 148),
-                                  borderRadius: BorderRadius.circular(1),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      offset: Offset(0, 0),
-                                      blurRadius: 0.8,
-                                      spreadRadius: 0.8,
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Stack(
+                                  children: [
+                                    Transform.rotate(
+                                      angle: math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.rotate(
+                                      angle: -math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: height * 0.4),
-                child: Stack(
-                  alignment: AlignmentDirectional.topCenter,
-                  children: [
-                    Container(
-                      height: height * 0.55,
-                      width: 7,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 212, 226, 190),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: height * 0.33),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              children: [
-                                Transform.rotate(
-                                  angle: math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Transform.rotate(
-                                  angle: -math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Stack(
-                              children: [
-                                Transform.rotate(
-                                  angle: math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Transform.rotate(
-                                  angle: -math.pi / 4,
-                                  child: Container(
-                                    height: height * 0.035,
-                                    width: 5,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 171, 211, 148),
-                                      borderRadius: BorderRadius.circular(1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0.8,
-                                          spreadRadius: 0.8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: height * 0.25),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        Container(
+                          height: height * 0.55,
+                          width: 7,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 212, 226, 190),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 0),
+                            child: SizedBox(
                               height: 14,
                               child: SimpleShadow(
                                 child: Image.asset('assets/Infinity_Icon.png'),
                                 opacity: 0.7,
                                 color: Colors.black.withOpacity(0.2),
-                                offset: Offset(0,0),
+                                offset: Offset(0, 0),
                               ),
                             ),
-                          ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: height * 0.15),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        Container(
+                          height: height * 0.55,
+                          width: 7,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 212, 226, 190),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: height * 0.4),
+                            child: Stack(
+                              children: [
+                                Transform.rotate(
+                                  angle: math.pi / 4,
+                                  child: Container(
+                                    height: height * 0.035,
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 171, 211, 148),
+                                      borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Transform.rotate(
+                                  angle: -math.pi / 4,
+                                  child: Container(
+                                    height: height * 0.035,
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 171, 211, 148),
+                                      borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: height * 0.4),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        Container(
+                          height: height * 0.55,
+                          width: 7,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 212, 226, 190),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height * 0.33),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Transform.rotate(
+                                      angle: math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.rotate(
+                                      angle: -math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Stack(
+                                  children: [
+                                    Transform.rotate(
+                                      angle: math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.rotate(
+                                      angle: -math.pi / 4,
+                                      child: Container(
+                                        height: height * 0.035,
+                                        width: 5,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 171, 211, 148),
+                                          borderRadius: BorderRadius.circular(1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.2),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.8,
+                                              spreadRadius: 0.8,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 14,
+                                  child: SimpleShadow(
+                                    child: Image.asset('assets/Infinity_Icon.png'),
+                                    opacity: 0.7,
+                                    color: Colors.black.withOpacity(0.2),
+                                    offset: Offset(0, 0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: height * 0.4,
+                left: width * 0.05,
+                right: width * 0.05,
+              ),
+              child: Form(
+                key: dataFormKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 60,
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.only(left: 20,right: 15),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 224, 250, 153),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.35),
+                            blurRadius: 4,
+                            spreadRadius: -1,
+                            offset: Offset(0,3),
+                          ),
+                        ],
                       ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'MIN VALUE',
+                            style: GoogleFonts.openSans(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              color: Colors.black,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 4.0,
+                                  offset: Offset(0.5,1),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 30,
+                            width: width*0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              textInputAction: TextInputAction.next,
+                              controller: _minValueController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(8),
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              onTap: (){
+                                setState(() {
+                                  _minValueController.text = '';
+                                });
+                              },
+                              onChanged: (text){
+                                setState(() {
+                                  _minValueInteger = int.parse(text);
+                                });
+                              },
+                              validator: (text) {
+                                if (text == null || text.isEmpty) {
+                                  setState(() {
+                                    _minValueController.text = '0';
+                                  });
+                                }
+                              },
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(bottom: 15)
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 100,
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      color: Colors.amber,
+                    ),
+                    Container(
+                      height: 100,
+                      color: Colors.amber,
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    Container(
+                      height: 100,
+                      color: Colors.amber,
+                      margin: EdgeInsets.symmetric(vertical: 10),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
           Container(
             height: height * 0.32,
@@ -429,30 +557,37 @@ class _HomePageState extends State<HomePage> {
                 width: 180,
                 child: ElevatedButton(
                   onPressed: () {
-                    integer = !integer;
-                    if (integer) {
+                    _integer = !_integer;
+                    if (_integer) {
                       setState(() {
-                        type = 'INTEGER';
-                        buttonType = 'Decimal';
-                        firstDotColor = Colors.white;
-                        secondDotColor = Color.fromARGB(255, 108, 143, 117);
+                        _type = 'INTEGER';
+                        _buttonType = 'Decimal';
+                        _firstDotColor = Colors.white;
+                        _secondDotColor = Color.fromARGB(255, 108, 143, 117);
                       });
                     } else {
                       setState(() {
-                        type = 'DECIMAL';
-                        buttonType = 'Integer';
-                        firstDotColor = Color.fromARGB(255, 108, 143, 117);
-                        secondDotColor = Colors.white;
+                        _type = 'DECIMAL';
+                        _buttonType = 'Integer';
+                        _firstDotColor = Color.fromARGB(255, 108, 143, 117);
+                        _secondDotColor = Colors.white;
                       });
                     }
                   },
                   child: Text(
-                    buttonType,
+                    _buttonType,
                     style: GoogleFonts.roboto(
                       fontSize: 26,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
+                      shadows: [
+                        Shadow(
+                            color: Colors.black.withOpacity(0.5),
+                            blurRadius: 7.0,
+                            offset: Offset(1,2),
+                        )
+                      ],
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -478,12 +613,20 @@ class _HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    type,
+                    _type,
                     style: GoogleFonts.openSans(
                         fontSize: 36,
                         color: Color.fromARGB(255, 190, 241, 136),
                         fontWeight: FontWeight.w500,
-                        letterSpacing: 1.2),
+                        letterSpacing: 1.2,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.4),
+                          blurRadius: 5.0,
+                          offset: Offset(1,2),
+                        )
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -492,7 +635,7 @@ class _HomePageState extends State<HomePage> {
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
-                            color: firstDotColor, borderRadius: BorderRadius.circular(5)),
+                            color: _firstDotColor, borderRadius: BorderRadius.circular(5)),
                       ),
                       SizedBox(
                         width: 8,
@@ -501,11 +644,33 @@ class _HomePageState extends State<HomePage> {
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
-                            color: secondDotColor, borderRadius: BorderRadius.circular(5)),
+                            color: _secondDotColor, borderRadius: BorderRadius.circular(5)),
                       ),
                     ],
                   ),
                 ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              height: 80,
+              width: 80,
+              margin: EdgeInsets.only(top: height * 0.32 - 40, right: 40),
+              child: ElevatedButton(
+                onPressed: () {
+                  print(_minValueInteger);
+                },
+                child: Icon(
+                  Icons.play_arrow,
+                  size: 45,
+                ),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                  elevation: 3,
+                  primary: Color.fromARGB(255, 252, 236, 82),
+                ),
               ),
             ),
           ),
