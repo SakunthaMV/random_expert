@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 
+import 'package:simple_shadow/simple_shadow.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -18,14 +20,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 238, 255, 227),
       body: Stack(
@@ -35,7 +31,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: height*0.35),
+                padding: EdgeInsets.only(top: height * 0.35),
                 child: Stack(
                   alignment: AlignmentDirectional.topCenter,
                   children: [
@@ -50,31 +46,47 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: EdgeInsets.only(top: height*0.28),
+                        padding: EdgeInsets.only(top: height * 0.28),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Stack(
                               children: [
                                 Transform.rotate(
-                                  angle: math.pi/4,
+                                  angle: math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                                 Transform.rotate(
-                                  angle: -math.pi/4,
+                                  angle: -math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -86,24 +98,40 @@ class _HomePageState extends State<HomePage> {
                             Stack(
                               children: [
                                 Transform.rotate(
-                                  angle: math.pi/4,
+                                  angle: math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                                 Transform.rotate(
-                                  angle: -math.pi/4,
+                                  angle: -math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -117,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: height*0.25),
+                padding: EdgeInsets.only(top: height * 0.25),
                 child: Stack(
                   alignment: AlignmentDirectional.topCenter,
                   children: [
@@ -135,8 +163,11 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(top: 0),
                         child: SizedBox(
                           height: 14,
-                          child: Image.asset(
-                              'assets/Infinity_Icon.png'
+                          child: SimpleShadow(
+                            child: Image.asset('assets/Infinity_Icon.png'),
+                            opacity: 0.7,
+                            color: Colors.black.withOpacity(0.2),
+                            offset: Offset(0,0),
                           ),
                         ),
                       ),
@@ -145,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: height*0.15),
+                padding: EdgeInsets.only(top: height * 0.15),
                 child: Stack(
                   alignment: AlignmentDirectional.topCenter,
                   children: [
@@ -160,28 +191,44 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: EdgeInsets.only(bottom: height*0.4),
+                        padding: EdgeInsets.only(bottom: height * 0.4),
                         child: Stack(
                           children: [
                             Transform.rotate(
-                              angle: math.pi/4,
+                              angle: math.pi / 4,
                               child: Container(
                                 height: height * 0.035,
                                 width: 5,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 171, 211, 148),
                                   borderRadius: BorderRadius.circular(1),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      offset: Offset(0, 0),
+                                      blurRadius: 0.8,
+                                      spreadRadius: 0.8,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                             Transform.rotate(
-                              angle: -math.pi/4,
+                              angle: -math.pi / 4,
                               child: Container(
                                 height: height * 0.035,
                                 width: 5,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 171, 211, 148),
                                   borderRadius: BorderRadius.circular(1),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      offset: Offset(0, 0),
+                                      blurRadius: 0.8,
+                                      spreadRadius: 0.8,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -193,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: height*0.4),
+                padding: EdgeInsets.only(top: height * 0.4),
                 child: Stack(
                   alignment: AlignmentDirectional.topCenter,
                   children: [
@@ -208,31 +255,47 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: EdgeInsets.only(top: height*0.33),
+                        padding: EdgeInsets.only(top: height * 0.33),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Stack(
                               children: [
                                 Transform.rotate(
-                                  angle: math.pi/4,
+                                  angle: math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                                 Transform.rotate(
-                                  angle: -math.pi/4,
+                                  angle: -math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -244,24 +307,40 @@ class _HomePageState extends State<HomePage> {
                             Stack(
                               children: [
                                 Transform.rotate(
-                                  angle: math.pi/4,
+                                  angle: math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                                 Transform.rotate(
-                                  angle: -math.pi/4,
+                                  angle: -math.pi / 4,
                                   child: Container(
                                     height: height * 0.035,
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: Color.fromARGB(255, 171, 211, 148),
                                       borderRadius: BorderRadius.circular(1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 0.8,
+                                          spreadRadius: 0.8,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -272,8 +351,11 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SizedBox(
                               height: 14,
-                              child: Image.asset(
-                                  'assets/Infinity_Icon.png'
+                              child: SimpleShadow(
+                                child: Image.asset('assets/Infinity_Icon.png'),
+                                opacity: 0.7,
+                                color: Colors.black.withOpacity(0.2),
+                                offset: Offset(0,0),
                               ),
                             ),
                           ],
@@ -295,11 +377,10 @@ class _HomePageState extends State<HomePage> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.35),
-                  offset: Offset(0,0),
-                  blurRadius: 7.0,
-                  spreadRadius: 3.0
-                ),
+                    color: Colors.black.withOpacity(0.35),
+                    offset: Offset(0, 0),
+                    blurRadius: 7.0,
+                    spreadRadius: 3.0),
               ],
               border: Border.all(
                 color: Color.fromARGB(255, 112, 112, 112),
