@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String type = 'INTEGER';
+  String buttonType = 'Decimal';
+  bool integer = true;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -50,8 +58,7 @@ class HomePage extends StatelessWidget {
                       Shadow(
                         offset: Offset(1, 1),
                         blurRadius: 9.0,
-                        color: Color.fromARGB(255,112, 112, 112).withOpacity(0.7),
-
+                        color: Color.fromARGB(255, 112, 112, 112).withOpacity(0.7),
                       ),
                     ],
                   ),
@@ -59,6 +66,52 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: EdgeInsets.only(top: height*0.15),
+              child: SizedBox(
+                height: 50,
+                width: 180,
+                child: ElevatedButton(
+                  onPressed: () {
+                    integer = !integer;
+                    if (integer){
+                      setState(() {
+                        type = 'INTEGER';
+                        buttonType = 'Decimal';
+                      });
+                    } else {
+                      setState(() {
+                        type = 'DECIMAL';
+                        buttonType = 'Integer';
+                      });
+                    }
+                    print(type);
+                  },
+                  child: Text(
+                    buttonType,
+                    style: GoogleFonts.roboto(
+                      fontSize: 26,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 3,
+                    primary: Color.fromARGB(255, 108, 143, 117),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
