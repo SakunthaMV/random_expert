@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 
@@ -12,8 +15,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final dataFormKey = GlobalKey<FormState>();
+
+  List<int> _numberList = [];
+  int _randomNumberInteger = 0;
 
   String _type = 'INTEGER';
   String _buttonType = 'Decimal';
@@ -25,11 +31,25 @@ class _HomePageState extends State<HomePage> {
   int _items = 1;
   bool _repetitionChecked = true;
   bool _sumChecked = false;
+  double _heightScale = 0.2;
 
   TextEditingController _minValueController = TextEditingController(text: '0');
   TextEditingController _maxValueController = TextEditingController(text: '100');
   TextEditingController _itemsController = TextEditingController(text: '1');
   TextEditingController _decimalController = TextEditingController();
+
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.only(top: height * 0.28),
+                            padding: EdgeInsets.only(top: height * 0.43),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -160,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: height * 0.25),
+                    padding: EdgeInsets.only(top: height * 0.17),
                     child: Stack(
                       alignment: AlignmentDirectional.topCenter,
                       children: [
@@ -175,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.only(top: 0),
+                            padding: EdgeInsets.only(top: height * 0.3),
                             child: SizedBox(
                               height: 14,
                               child: SimpleShadow(
@@ -191,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: height * 0.15),
+                    padding: EdgeInsets.only(top: 0),
                     child: Stack(
                       alignment: AlignmentDirectional.topCenter,
                       children: [
@@ -206,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: height * 0.4),
+                            padding: EdgeInsets.only(top: height * 0.15),
                             child: Stack(
                               children: [
                                 Transform.rotate(
@@ -255,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: height * 0.4),
+                    padding: EdgeInsets.only(top: height * 0.35),
                     child: Stack(
                       alignment: AlignmentDirectional.topCenter,
                       children: [
@@ -270,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.only(top: height * 0.33),
+                            padding: EdgeInsets.only(top: height * 0.43),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -385,9 +405,10 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SingleChildScrollView(
-            child: Padding(
+            child: AnimatedContainer(
+              duration: Duration(seconds: 1),
               padding: EdgeInsets.only(
-                top: height * 0.4,
+                top: height * _heightScale,
                 left: width * 0.05,
                 right: width * 0.05,
               ),
@@ -397,6 +418,65 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: ScaleTransition(
+                        alignment: Alignment.bottomCenter,
+                        scale: _animation,
+                        child: Container(
+                          width: width * 0.55,
+                          height: height * 0.17,
+                          margin: EdgeInsets.only(left: width * 0.05, bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(35),
+                              bottomLeft: Radius.circular(35),
+                              bottomRight: Radius.circular(35),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                              )
+                            ],
+                          ),
+                          child: Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: [
+                              Text(
+                                '$_randomNumberInteger',
+                                style: GoogleFonts.droidSerif(
+                                  fontSize: 85,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      blurRadius: 3,
+                                      offset: Offset(1, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: IconButton(
+                                  iconSize: 20,
+                                  onPressed: () {
+                                    print(_randomNumberInteger);
+                                  },
+                                  icon: Icon(
+                                    Icons.copy_outlined,
+                                  ),
+                                  color: Color.fromARGB(255, 243, 231, 113),
+                                  splashRadius: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     Container(
                       height: 60,
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -469,7 +549,7 @@ class _HomePageState extends State<HomePage> {
                                 }
                               },
                               validator: (text) {
-                                if (text == null || text.isEmpty){
+                                if (text == null || text.isEmpty) {
                                   setState(() {
                                     _minValueController.text = '0';
                                     _minValueInteger = 0;
@@ -561,7 +641,7 @@ class _HomePageState extends State<HomePage> {
                                 }
                               },
                               validator: (text) {
-                                if (text == null || text.isEmpty){
+                                if (text == null || text.isEmpty) {
                                   setState(() {
                                     _maxValueController.text = '100';
                                     _maxValueInteger = 100;
@@ -655,7 +735,7 @@ class _HomePageState extends State<HomePage> {
                                 }
                               },
                               validator: (text) {
-                                if (text == null || text.isEmpty){
+                                if (text == null || text.isEmpty) {
                                   setState(() {
                                     _itemsController.text = '1';
                                     _items = 1;
@@ -800,7 +880,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Container(
-            height: height * 0.32,
+            height: height * 0.3,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 59, 112, 128),
               borderRadius: BorderRadius.only(
@@ -855,7 +935,7 @@ class _HomePageState extends State<HomePage> {
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: EdgeInsets.only(top: height * 0.13),
+              padding: EdgeInsets.only(top: height * 0.12),
               child: SizedBox(
                 height: 50,
                 width: 180,
@@ -911,7 +991,7 @@ class _HomePageState extends State<HomePage> {
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: EdgeInsets.only(top: height * 0.21, left: width * 0.2),
+              padding: EdgeInsets.only(top: height * 0.195, left: width * 0.2),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -961,15 +1041,96 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               height: 80,
               width: 80,
-              margin: EdgeInsets.only(top: height * 0.32 - 40, right: 40),
+              margin: EdgeInsets.only(top: height * 0.3 - 40, right: 40),
               child: ElevatedButton(
                 onPressed: () {
                   final isValid = dataFormKey.currentState!.validate();
                   if (isValid) {
-                    print(_minValueInteger);
-                    print(_maxValueInteger);
-                    print(_items);
-                    print(_repetitionChecked);
+                    int sum = 0;
+                    var random = Random();
+                    if(_numberList.isNotEmpty){
+                      _numberList.clear();
+                    }
+                    if (_maxValueInteger>_minValueInteger) {
+                      if (_repetitionChecked) {
+                        for (int i = 0; i < _items; i++) {
+                          int randomNumber =
+                              random.nextInt(_maxValueInteger - _minValueInteger) +
+                                  _minValueInteger;
+                          _numberList.add(randomNumber);
+                        }
+                        if (_sumChecked) {
+                          if (_items > 1) {
+                            if (_numberList.isNotEmpty) {
+                              _numberList.forEach((element) => sum += element);
+                              print(_numberList);
+                              print(sum);
+                              print('more numbers');
+                            }
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: 'Sum is equal to random number',
+                              timeInSecForIosWeb: 1,
+                            );
+                            setState(() {
+                              _randomNumberInteger = _numberList[0];
+                              _heightScale = 0.33;
+                            });
+                            _animationController.forward();
+                          }
+                        }
+                      } else {
+                        if (_maxValueInteger - _minValueInteger > _items) {
+                          while (_numberList.length < _items) {
+                            int randomNumber =
+                                random.nextInt(_maxValueInteger - _minValueInteger) +
+                                    _minValueInteger;
+                            if (_numberList.contains(randomNumber)) {
+                              continue;
+                            } else {
+                              _numberList.add(randomNumber);
+                            }
+                          }
+                          if (_sumChecked) {
+                            if (_items > 1) {
+                              if (_numberList.isNotEmpty) {
+                                _numberList.forEach((element) => sum += element);
+                                print(_numberList);
+                                print(sum);
+                                print('more numbers');
+                              }
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: 'Sum is equal to random number',
+                                timeInSecForIosWeb: 1,
+                              );
+                              setState(() {
+                                _randomNumberInteger = _numberList[0];
+                                _heightScale = 0.33;
+                              });
+                              _animationController.forward();
+                            }
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: 'Number range is insufficient.',
+                            timeInSecForIosWeb: 1,
+                          );
+                        }
+                      }
+                    } else {
+                      if(_minValueInteger==_maxValueInteger){
+                        Fluttertoast.showToast(
+                          msg: 'MIN VALUE is equal to MAX VALUE',
+                          timeInSecForIosWeb: 1,
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: 'MIN VALUE is larger than MAX VALUE',
+                          timeInSecForIosWeb: 1,
+                        );
+                      }
+                    }
                   }
                 },
                 child: Icon(
