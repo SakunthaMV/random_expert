@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:math' as math;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,11 +15,19 @@ class _HomePageState extends State<HomePage> {
   bool integer = true;
   Color firstDotColor = Colors.white;
   Color secondDotColor = Color.fromARGB(255, 108, 143, 117);
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 238, 255, 227),
       body: Stack(
         alignment: AlignmentDirectional.topCenter,
         children: [
@@ -71,14 +80,14 @@ class _HomePageState extends State<HomePage> {
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: EdgeInsets.only(top: height*0.13),
+              padding: EdgeInsets.only(top: height * 0.13),
               child: SizedBox(
                 height: 50,
                 width: 180,
                 child: ElevatedButton(
                   onPressed: () {
                     integer = !integer;
-                    if (integer){
+                    if (integer) {
                       setState(() {
                         type = 'INTEGER';
                         buttonType = 'Decimal';
@@ -100,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 26,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2
+                      letterSpacing: 1.2,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -120,7 +129,7 @@ class _HomePageState extends State<HomePage> {
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: EdgeInsets.only(top: height*0.21, left: width*0.2),
+              padding: EdgeInsets.only(top: height * 0.21, left: width * 0.2),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -128,11 +137,10 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     type,
                     style: GoogleFonts.openSans(
-                      fontSize: 36,
-                      color: Color.fromARGB(255, 190, 241, 136),
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1.2
-                    ),
+                        fontSize: 36,
+                        color: Color.fromARGB(255, 190, 241, 136),
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 1.2),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -141,9 +149,7 @@ class _HomePageState extends State<HomePage> {
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
-                          color: firstDotColor,
-                          borderRadius: BorderRadius.circular(5)
-                        ),
+                            color: firstDotColor, borderRadius: BorderRadius.circular(5)),
                       ),
                       SizedBox(
                         width: 8,
@@ -152,15 +158,127 @@ class _HomePageState extends State<HomePage> {
                         height: 8,
                         width: 8,
                         decoration: BoxDecoration(
-                            color:secondDotColor,
-                            borderRadius: BorderRadius.circular(5)
-                        ),
+                            color: secondDotColor, borderRadius: BorderRadius.circular(5)),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: height*0.35),
+                child: Stack(
+                  alignment: AlignmentDirectional.topCenter,
+                  children: [
+                    Container(
+                      height: height * 0.55,
+                      width: 7,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 212, 226, 190),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: height*0.28),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Stack(
+                              children: [
+                                Transform.rotate(
+                                  angle: math.pi/4,
+                                  child: Container(
+                                    height: height * 0.035,
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 171, 211, 148),
+                                      borderRadius: BorderRadius.circular(1),
+                                    ),
+                                  ),
+                                ),
+                                Transform.rotate(
+                                  angle: -math.pi/4,
+                                  child: Container(
+                                    height: height * 0.035,
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 171, 211, 148),
+                                      borderRadius: BorderRadius.circular(1),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Stack(
+                              children: [
+                                Transform.rotate(
+                                  angle: math.pi/4,
+                                  child: Container(
+                                    height: height * 0.035,
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 171, 211, 148),
+                                      borderRadius: BorderRadius.circular(1),
+                                    ),
+                                  ),
+                                ),
+                                Transform.rotate(
+                                  angle: -math.pi/4,
+                                  child: Container(
+                                    height: height * 0.035,
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 171, 211, 148),
+                                      borderRadius: BorderRadius.circular(1),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: height * 0.55,
+                width: 7,
+                margin: EdgeInsets.only(top: height * 0.1),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 212, 226, 190),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                height: height * 0.55,
+                width: 7,
+                margin: EdgeInsets.only(bottom: height * 0.2),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 212, 226, 190),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                height: height * 0.55,
+                width: 7,
+                margin: EdgeInsets.only(top: height * 0.4),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 212, 226, 190),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ],
           ),
         ],
       ),
