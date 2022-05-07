@@ -19,24 +19,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final dataFormKey = GlobalKey<FormState>();
 
   List<int> _numberList = [];
-  int _randomNumberInteger = 0;
 
-  String _type = 'INTEGER';
-  String _buttonType = 'Decimal';
-  bool _integer = true;
-  Color _firstDotColor = Colors.white;
-  Color _secondDotColor = Color.fromARGB(255, 108, 143, 117);
+  int _randomNumberInteger = 0;
   int _minValueInteger = 0;
   int _maxValueInteger = 100;
   int _items = 1;
+  int _decimals = 2;
+
+  String _type = 'INTEGER';
+  String _buttonType = 'Decimal';
+
+  Color _firstDotColor = Colors.white;
+  Color _secondDotColor = Color.fromARGB(255, 108, 143, 117);
+
   bool _repetitionChecked = true;
   bool _sumChecked = false;
+  bool _integer = true;
+  bool _bigInteger = false;
+
   double _heightScale = 0.2;
+  double _randomNumberDecimal = 0.00;
+  double _minValueDecimal = 0.00;
+  double _maxValueDecimal = 100.00;
 
   TextEditingController _minValueController = TextEditingController(text: '0');
   TextEditingController _maxValueController = TextEditingController(text: '100');
   TextEditingController _itemsController = TextEditingController(text: '1');
-  TextEditingController _decimalController = TextEditingController();
+  TextEditingController _decimalController = TextEditingController(text: '2');
 
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -448,7 +457,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               Text(
                                 '$_randomNumberInteger',
                                 style: GoogleFonts.droidSerif(
-                                  fontSize: 85,
+                                  fontSize: _bigInteger ? 38 : 85,
                                   shadows: [
                                     Shadow(
                                       color: Colors.black.withOpacity(0.4),
@@ -463,7 +472,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 child: IconButton(
                                   iconSize: 20,
                                   onPressed: () {
-                                    print(_randomNumberInteger);
+                                    Clipboard.setData(
+                                        ClipboardData(text: '$_randomNumberInteger'));
+                                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
                                   },
                                   icon: Icon(
                                     Icons.copy_outlined,
@@ -477,6 +488,105 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+                    _integer
+                        ? Container()
+                        : Container(
+                            height: 80,
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            padding: EdgeInsets.only(left: 20, right: 15),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 224, 250, 153),
+                              borderRadius: BorderRadius.circular(40),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.35),
+                                  blurRadius: 4,
+                                  spreadRadius: -1,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: width * 0.5,
+                                  child: Text(
+                                    'NUMBER OF DECIMAL POINTS',
+                                    style: GoogleFonts.openSans(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black.withOpacity(0.4),
+                                          blurRadius: 4.0,
+                                          offset: Offset(0.5, 1),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 30,
+                                  width: width * 0.3,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: TextFormField(
+                                    textAlign: TextAlign.center,
+                                    textInputAction: TextInputAction.next,
+                                    controller: _decimalController,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(1),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    onTap: () {
+                                      setState(() {
+                                        _decimalController.text = '';
+                                      });
+                                    },
+                                    onChanged: (text) {
+                                      if(text.isNotEmpty){
+                                        setState(() {
+                                          _decimals = int.parse(text);
+                                        });
+                                      }
+                                    },
+                                    onFieldSubmitted: (text) {
+                                      if (text.isEmpty) {
+                                        setState(() {
+                                          _decimalController.text = '2';
+                                          _decimals = 2;
+                                        });
+                                      }
+                                    },
+                                    validator: (text) {
+                                      if (text == null || text.isEmpty) {
+                                        setState(() {
+                                          _decimalController.text = '2';
+                                          _decimals = 2;
+                                        });
+                                      }
+                                      return null;
+                                    },
+                                    style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                    cursorColor: Colors.black,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(bottom: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                     Container(
                       height: 60,
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -523,19 +633,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               textInputAction: TextInputAction.next,
                               controller: _minValueController,
                               keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(8),
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
+                              inputFormatters: _integer
+                                  ? [
+                                      LengthLimitingTextInputFormatter(8),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ]
+                                  : [
+                                      LengthLimitingTextInputFormatter(9),
+                                    ],
                               onTap: () {
                                 setState(() {
                                   _minValueController.text = '';
                                 });
                               },
                               onChanged: (text) {
-                                setState(() {
-                                  _minValueInteger = int.parse(text);
-                                });
+                                if (text.isNotEmpty) {
+                                  setState(() {
+                                    if(_integer){
+                                      _minValueInteger = int.parse(text);
+                                    } else {
+                                      _minValueDecimal = double.parse(text);
+                                    }
+                                  });
+                                }
                               },
                               onFieldSubmitted: (text) {
                                 setState(() {
@@ -543,16 +663,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 });
                                 if (text.isEmpty) {
                                   setState(() {
-                                    _minValueController.text = '0';
-                                    _minValueInteger = 0;
+                                    if(_integer) {
+                                      _minValueController.text = '0';
+                                      _minValueInteger = 0;
+                                    } else {
+                                      _minValueController.text = '0.00';
+                                      _minValueDecimal = 0.00;
+                                    }
                                   });
                                 }
                               },
                               validator: (text) {
                                 if (text == null || text.isEmpty) {
                                   setState(() {
-                                    _minValueController.text = '0';
-                                    _minValueInteger = 0;
+                                    if (_integer) {
+                                      _minValueController.text = '0';
+                                      _minValueInteger = 0;
+                                    } else {
+                                      _minValueController.text = '0.00';
+                                      _minValueDecimal = 0.00;
+                                    }
                                   });
                                 }
                                 return null;
@@ -617,9 +747,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               textInputAction: TextInputAction.next,
                               controller: _maxValueController,
                               keyboardType: TextInputType.number,
-                              inputFormatters: [
+                              inputFormatters: _integer
+                                  ? [
                                 LengthLimitingTextInputFormatter(8),
                                 FilteringTextInputFormatter.digitsOnly,
+                              ]
+                                  : [
+                                LengthLimitingTextInputFormatter(9),
                               ],
                               onTap: () {
                                 setState(() {
@@ -627,24 +761,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 });
                               },
                               onChanged: (text) {
-                                setState(() {
-                                  _maxValueInteger = int.parse(text);
-                                });
+                                if(text.isNotEmpty){
+                                  setState(() {
+                                    if (_integer) {
+                                      _maxValueInteger = int.parse(text);
+                                    } else {
+                                      _maxValueDecimal = double.parse(text);
+                                    }
+                                  });
+                                }
                               },
                               onFieldSubmitted: (text) {
                                 _itemsController.text = '';
                                 if (text.isEmpty) {
                                   setState(() {
-                                    _maxValueController.text = '100';
-                                    _maxValueInteger = 100;
+                                    if (_integer) {
+                                      _maxValueController.text = '100';
+                                      _maxValueInteger = 100;
+                                    } else {
+                                      _maxValueController.text = '100.00';
+                                      _maxValueDecimal = 100.00;
+                                    }
                                   });
                                 }
                               },
                               validator: (text) {
                                 if (text == null || text.isEmpty) {
                                   setState(() {
-                                    _maxValueController.text = '100';
-                                    _maxValueInteger = 100;
+                                    if (_integer) {
+                                      _maxValueController.text = '100';
+                                      _maxValueInteger = 100;
+                                    } else {
+                                      _maxValueController.text = '100.00';
+                                      _maxValueDecimal = 100.00;
+                                    }
                                   });
                                 }
                                 return null;
@@ -948,6 +1098,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _buttonType = 'Decimal';
                         _firstDotColor = Colors.white;
                         _secondDotColor = Color.fromARGB(255, 108, 143, 117);
+                        _minValueController.text = '0';
+                        _maxValueController.text = '100';
                       });
                     } else {
                       setState(() {
@@ -955,6 +1107,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _buttonType = 'Integer';
                         _firstDotColor = Color.fromARGB(255, 108, 143, 117);
                         _secondDotColor = Colors.white;
+                        _minValueController.text = '0.00';
+                        _maxValueController.text = '100.00';
                       });
                     }
                   },
@@ -1048,10 +1202,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   if (isValid) {
                     int sum = 0;
                     var random = Random();
-                    if(_numberList.isNotEmpty){
+                    if (_numberList.isNotEmpty) {
                       _numberList.clear();
                     }
-                    if (_maxValueInteger>_minValueInteger) {
+                    if (_maxValueInteger > _minValueInteger) {
                       if (_repetitionChecked) {
                         for (int i = 0; i < _items; i++) {
                           int randomNumber =
@@ -1059,28 +1213,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   _minValueInteger;
                           _numberList.add(randomNumber);
                         }
-                        if (_sumChecked) {
-                          if (_items > 1) {
-                            if (_numberList.isNotEmpty) {
-                              _numberList.forEach((element) => sum += element);
-                              print(_numberList);
-                              print(sum);
-                              print('more numbers');
-                            }
-                          } else {
-                            Fluttertoast.showToast(
-                              msg: 'Sum is equal to random number',
-                              timeInSecForIosWeb: 1,
-                            );
-                            setState(() {
-                              _randomNumberInteger = _numberList[0];
-                              _heightScale = 0.33;
-                            });
-                            _animationController.forward();
-                          }
-                        }
+                        print('1');
                       } else {
-                        if (_maxValueInteger - _minValueInteger > _items) {
+                        if (_maxValueInteger - _minValueInteger >= _items) {
                           while (_numberList.length < _items) {
                             int randomNumber =
                                 random.nextInt(_maxValueInteger - _minValueInteger) +
@@ -1091,26 +1226,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               _numberList.add(randomNumber);
                             }
                           }
-                          if (_sumChecked) {
-                            if (_items > 1) {
-                              if (_numberList.isNotEmpty) {
-                                _numberList.forEach((element) => sum += element);
-                                print(_numberList);
-                                print(sum);
-                                print('more numbers');
-                              }
-                            } else {
-                              Fluttertoast.showToast(
-                                msg: 'Sum is equal to random number',
-                                timeInSecForIosWeb: 1,
-                              );
-                              setState(() {
-                                _randomNumberInteger = _numberList[0];
-                                _heightScale = 0.33;
-                              });
-                              _animationController.forward();
-                            }
-                          }
+                          print('2');
                         } else {
                           Fluttertoast.showToast(
                             msg: 'Number range is insufficient.',
@@ -1118,8 +1234,65 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           );
                         }
                       }
+                      if (_sumChecked) {
+                        if (_items > 1) {
+                          if (_numberList.isNotEmpty) {
+                            _numberList.forEach((element) => sum += element);
+                            print(_numberList);
+                            print(sum);
+                            print('more numbers');
+                            print('sum');
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: 'Sum is equal to random number',
+                            timeInSecForIosWeb: 1,
+                          );
+                          if (_numberList.isNotEmpty) {
+                            setState(() {
+                              _randomNumberInteger = _numberList[0];
+                              _heightScale = 0.33;
+                            });
+                            if (_randomNumberInteger > 999) {
+                              setState(() {
+                                _bigInteger = true;
+                              });
+                            } else {
+                              setState(() {
+                                _bigInteger = false;
+                              });
+                            }
+                            _animationController.forward();
+                          }
+                        }
+                      } else {
+                        if (_items > 1) {
+                          if (_numberList.isNotEmpty) {
+                            print(_numberList);
+                            print('more numbers');
+                            print('not sum');
+                          }
+                        } else {
+                          if (_numberList.isNotEmpty) {
+                            setState(() {
+                              _randomNumberInteger = _numberList[0];
+                              _heightScale = 0.33;
+                            });
+                            if (_randomNumberInteger > 999) {
+                              setState(() {
+                                _bigInteger = true;
+                              });
+                            } else {
+                              setState(() {
+                                _bigInteger = false;
+                              });
+                            }
+                            _animationController.forward();
+                          }
+                        }
+                      }
                     } else {
-                      if(_minValueInteger==_maxValueInteger){
+                      if (_minValueInteger == _maxValueInteger) {
                         Fluttertoast.showToast(
                           msg: 'MIN VALUE is equal to MAX VALUE',
                           timeInSecForIosWeb: 1,
