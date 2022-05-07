@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:random_expert/ResultPage.dart';
 import 'dart:math' as math;
 
 import 'package:simple_shadow/simple_shadow.dart';
@@ -459,7 +461,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    '${_integer? _randomNumberInteger : _randomNumberDecimal}',
+                                    '${_integer ? _randomNumberInteger : _randomNumberDecimal}',
                                     style: GoogleFonts.droidSerif(
                                       fontSize: 85,
                                       shadows: [
@@ -884,9 +886,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 });
                               },
                               onChanged: (text) {
-                                setState(() {
-                                  _items = int.parse(text);
-                                });
+                                if(text.isNotEmpty) {
+                                  setState(() {
+                                    _items = int.parse(text);
+                                  });
+                                }
                               },
                               onFieldSubmitted: (text) {
                                 if (text.isEmpty) {
@@ -1231,7 +1235,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     _minValueInteger;
                             _numberList.add(randomNumber);
                           }
-                          print('1');
                         } else {
                           if (_maxValueInteger - _minValueInteger >= _items) {
                             while (_numberList.length < _items) {
@@ -1244,7 +1247,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 _numberList.add(randomNumber);
                               }
                             }
-                            print('2');
                           } else {
                             Fluttertoast.showToast(
                               msg: 'Number range is insufficient.',
@@ -1256,10 +1258,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           if (_items > 1) {
                             if (_numberList.isNotEmpty) {
                               _numberList.forEach((element) => sum += element);
-                              print(_numberList);
-                              print(sum);
-                              print('more numbers');
-                              print('sum');
+                              Navigator.of(context).push(
+                                PageTransition(
+                                  child: ResultPage(
+                                    _type,
+                                    _numberList,
+                                    sum: sum.toDouble(),
+                                  ),
+                                  type: PageTransitionType.leftToRight,
+                                ),
+                              );
                             }
                           } else {
                             Fluttertoast.showToast(
@@ -1277,9 +1285,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         } else {
                           if (_items > 1) {
                             if (_numberList.isNotEmpty) {
-                              print(_numberList);
-                              print('more numbers');
-                              print('not sum');
+                              Navigator.of(context).push(
+                                PageTransition(
+                                  child: ResultPage(
+                                    _type,
+                                    _numberList,
+                                  ),
+                                  type: PageTransitionType.leftToRight,
+                                ),
+                              );
                             }
                           } else {
                             if (_numberList.isNotEmpty) {
@@ -1314,10 +1328,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             double randomNumber =
                                 random.nextDouble() * (_maxValueDecimal - _minValueDecimal) +
                                     _minValueDecimal;
-                            _decimalList.add(double.parse(randomNumber.toStringAsFixed(_decimals)));
+                            _decimalList
+                                .add(double.parse(randomNumber.toStringAsFixed(_decimals)));
                           }
                         } else {
-                          if ((_maxValueDecimal - _minValueDecimal)*pow(10,_decimals) >= _items) {
+                          if ((_maxValueDecimal - _minValueDecimal) * pow(10, _decimals) >=
+                              _items) {
                             while (_decimalList.length < _items) {
                               double randomNumber =
                                   random.nextDouble() * (_maxValueDecimal - _minValueDecimal) +
@@ -1325,7 +1341,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               if (_decimalList.contains(randomNumber)) {
                                 continue;
                               } else {
-                                _decimalList.add(randomNumber);
+                                _decimalList.add(
+                                    double.parse(randomNumber.toStringAsFixed(_decimals)));
                               }
                             }
                           } else {
@@ -1339,10 +1356,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           if (_items > 1) {
                             if (_decimalList.isNotEmpty) {
                               _decimalList.forEach((element) => decimalSum += element);
-                              print(_decimalList);
-                              print(decimalSum);
-                              print('more decimal numbers');
-                              print('Decimal Sum');
+                              Navigator.of(context).push(
+                                PageTransition(
+                                  child: ResultPage(
+                                    _type,
+                                    _decimalList,
+                                    sum: double.parse(decimalSum.toStringAsFixed(_decimals)),
+                                  ),
+                                  type: PageTransitionType.leftToRight,
+                                ),
+                              );
                             }
                           } else {
                             Fluttertoast.showToast(
@@ -1360,9 +1383,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         } else {
                           if (_items > 1) {
                             if (_decimalList.isNotEmpty) {
-                              print(_decimalList);
-                              print('more decimal numbers');
-                              print('not decimal sum');
+                              Navigator.of(context).push(
+                                PageTransition(
+                                  child: ResultPage(
+                                    _type,
+                                    _decimalList,
+                                  ),
+                                  type: PageTransitionType.leftToRight,
+                                ),
+                              );
                             }
                           } else {
                             if (_decimalList.isNotEmpty) {

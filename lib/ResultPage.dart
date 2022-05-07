@@ -10,8 +10,10 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 class ResultPage extends StatefulWidget {
   final String type;
+  final List numberList;
+  final double sum;
 
-  const ResultPage(this.type, {Key? key}) : super(key: key);
+  const ResultPage(this.type, this.numberList, {Key? key, this.sum = 0.0}) : super(key: key);
 
   @override
   State<ResultPage> createState() => _ResultPageState();
@@ -19,6 +21,13 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   String? selectedValue;
+  List? _sortedList = [];
+
+  @override
+  void initState() {
+    _sortedList = [...widget.numberList];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -374,9 +383,102 @@ class _ResultPageState extends State<ResultPage> {
             ],
           ),
           ListView.builder(
-            itemCount: 10,
-            padding: EdgeInsets.only(top: height*0.33, left: width*0.1, right: width*0.1),
+            itemCount:
+                widget.sum > 0.0 ? widget.numberList.length + 1 : widget.numberList.length,
+            padding:
+                EdgeInsets.only(top: height * 0.33, left: width * 0.1, right: width * 0.1),
             itemBuilder: (context, index) {
+              if (widget.sum > 0.0) {
+                if (index == 0) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: 75,
+                        margin: const EdgeInsets.only(top: 10, bottom: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 4,
+                              spreadRadius: 1.5,
+                            )
+                          ],
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerStart,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 30, right: 40),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: RichText(
+                                  text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 50,
+                                        color: Colors.black,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black.withOpacity(0.4),
+                                            blurRadius: 3,
+                                            offset: Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'SUM = ',
+                                          style: GoogleFonts.droidSerif(),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              '${widget.type == 'INTEGER' ? widget.sum.toStringAsFixed(0) : widget.sum}',
+                                          style: GoogleFonts.oldStandardTt(),
+                                        ),
+                                      ]),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: IconButton(
+                                iconSize: 20,
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(
+                                      text: widget.type == 'INTEGER'
+                                          ? widget.sum.toStringAsFixed(0)
+                                          : widget.sum.toString(),
+                                    ),
+                                  );
+                                  Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                                },
+                                icon: Icon(
+                                  Icons.copy_outlined,
+                                ),
+                                color: Color.fromARGB(255, 243, 231, 113),
+                                splashRadius: 15,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.black,
+                        thickness: 1,
+                        indent: 18,
+                        endIndent: 18,
+                      ),
+                    ],
+                  );
+                }
+              }
               return Container(
                 height: 75,
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -399,11 +501,11 @@ class _ResultPageState extends State<ResultPage> {
                   alignment: AlignmentDirectional.centerStart,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 40),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '100',
+                          '${widget.sum > 0.0 ? _sortedList![index - 1] : _sortedList![index]}',
                           style: GoogleFonts.droidSerif(
                             fontSize: 85,
                             shadows: [
@@ -423,7 +525,10 @@ class _ResultPageState extends State<ResultPage> {
                         iconSize: 20,
                         onPressed: () {
                           Clipboard.setData(
-                            ClipboardData(text: '100'),
+                            ClipboardData(
+                                text: widget.sum > 0.0
+                                    ? _sortedList![index - 1].toString()
+                                    : _sortedList![index].toString()),
                           );
                           Fluttertoast.showToast(msg: 'Copied to Clipboard');
                         },
@@ -442,22 +547,31 @@ class _ResultPageState extends State<ResultPage> {
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
-              padding: EdgeInsets.only(bottom: height*0.03, right: width*0.05),
+              padding: EdgeInsets.only(bottom: height * 0.03, right: width * 0.05),
               child: SizedBox(
                 width: 150,
                 height: 35,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String? numbers = _sortedList?.join(', ');
+                    Clipboard.setData(
+                      ClipboardData(
+                        text: numbers,
+                      ),
+                    );
+                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Icon(Icons.copy_outlined, size: 17, color: Colors.black,),
+                      Icon(
+                        Icons.copy_outlined,
+                        size: 17,
+                        color: Colors.black,
+                      ),
                       Text(
                         'COPY ALL',
-                        style: GoogleFonts.openSans(
-                          fontSize: 15,
-                          color: Colors.black
-                        ),
+                        style: GoogleFonts.openSans(fontSize: 15, color: Colors.black),
                       ),
                     ],
                   ),
@@ -466,7 +580,7 @@ class _ResultPageState extends State<ResultPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
-                    elevation: 3
+                    elevation: 3,
                   ),
                 ),
               ),
@@ -580,17 +694,25 @@ class _ResultPageState extends State<ResultPage> {
                   hint: Text(
                     'SORT BY',
                     style: GoogleFonts.roboto(
-                        fontSize: 14, letterSpacing: 3, color: Colors.black,),
+                      fontSize: 14,
+                      letterSpacing: 3,
+                      color: Colors.black,
+                    ),
                   ),
                   items: [
                     DropdownMenuItem(
                       child: Text(
-                          'Ascending',
+                        'Original View',
                         style: GoogleFonts.roboto(
-                          fontSize: 14,
-                          color: Colors.black,
-                          letterSpacing: 1.2
-                        ),
+                          fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                      ),
+                      value: 'Original View',
+                    ),
+                    DropdownMenuItem(
+                      child: Text(
+                        'Ascending',
+                        style: GoogleFonts.roboto(
+                            fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
                       ),
                       value: 'Ascending',
                     ),
@@ -598,10 +720,7 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Descending',
                         style: GoogleFonts.roboto(
-                          fontSize: 14,
-                          color: Colors.black,
-                          letterSpacing: 1.2
-                        ),
+                            fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
                       ),
                       value: 'Descending',
                     ),
@@ -611,21 +730,30 @@ class _ResultPageState extends State<ResultPage> {
                     setState(() {
                       selectedValue = value as String;
                     });
+                    if(selectedValue=='Ascending'){
+                      _sortedList?.sort();
+                    } else if (selectedValue=='Descending') {
+                      _sortedList = (_sortedList?..sort())?.reversed.toList();
+                    } else if (selectedValue=='Original View') {
+                      _sortedList = [...widget.numberList];
+                    }
+                    print(_sortedList);
+                    print(widget.numberList);
                   },
                   buttonHeight: 30,
-                  buttonWidth: 140,
+                  buttonWidth: 150,
                   itemHeight: 30,
                   buttonDecoration: BoxDecoration(
                     color: Color.fromARGB(255, 254, 242, 242),
                     borderRadius: BorderRadius.circular(7),
                   ),
-                  buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                  buttonPadding: const EdgeInsets.only(left: 14, right: 8),
                   buttonElevation: 2,
                   dropdownDecoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
                     color: Color.fromARGB(255, 238, 255, 227),
                   ),
-                  offset: Offset(0,-5),
+                  offset: Offset(0, -5),
                 ),
               ),
             ),
