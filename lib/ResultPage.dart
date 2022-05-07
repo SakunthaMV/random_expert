@@ -669,7 +669,7 @@ class _ResultPageState extends State<ResultPage> {
               margin: EdgeInsets.only(top: height * 0.25 - 40, right: 40),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                     PageTransition(child: HomePage(), type: PageTransitionType.rightToLeft),
                   );
                 },
@@ -737,8 +737,6 @@ class _ResultPageState extends State<ResultPage> {
                     } else if (selectedValue=='Original View') {
                       _sortedList = [...widget.numberList];
                     }
-                    print(_sortedList);
-                    print(widget.numberList);
                   },
                   buttonHeight: 30,
                   buttonWidth: 150,

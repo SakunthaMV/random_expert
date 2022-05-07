@@ -1258,7 +1258,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           if (_items > 1) {
                             if (_numberList.isNotEmpty) {
                               _numberList.forEach((element) => sum += element);
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 PageTransition(
                                   child: ResultPage(
                                     _type,
@@ -1285,7 +1285,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         } else {
                           if (_items > 1) {
                             if (_numberList.isNotEmpty) {
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 PageTransition(
                                   child: ResultPage(
                                     _type,
@@ -1356,7 +1356,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           if (_items > 1) {
                             if (_decimalList.isNotEmpty) {
                               _decimalList.forEach((element) => decimalSum += element);
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 PageTransition(
                                   child: ResultPage(
                                     _type,
@@ -1383,7 +1383,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         } else {
                           if (_items > 1) {
                             if (_decimalList.isNotEmpty) {
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 PageTransition(
                                   child: ResultPage(
                                     _type,
