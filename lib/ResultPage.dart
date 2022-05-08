@@ -386,7 +386,7 @@ class _ResultPageState extends State<ResultPage> {
             itemCount:
                 widget.sum > 0.0 ? widget.numberList.length + 1 : widget.numberList.length,
             padding:
-                EdgeInsets.only(top: height * 0.33, left: width * 0.1, right: width * 0.1),
+                EdgeInsets.only(top: height * 0.33, left: width * 0.1, right: width * 0.1, bottom: 30),
             itemBuilder: (context, index) {
               if (widget.sum > 0.0) {
                 if (index == 0) {
