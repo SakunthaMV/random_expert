@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:random_expert/HomePage.dart';
 import 'dart:math' as math;
 import 'package:simple_shadow/simple_shadow.dart';
+
+import 'AdHelper.dart';
 
 class ResultPage extends StatefulWidget {
   final String type;
@@ -23,9 +26,30 @@ class _ResultPageState extends State<ResultPage> {
   String? selectedValue;
   List? _sortedList = [];
 
+  late BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
+
   @override
   void initState() {
     _sortedList = [...widget.numberList];
+    _bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+    _bannerAd.load();
     super.initState();
   }
 
@@ -385,8 +409,12 @@ class _ResultPageState extends State<ResultPage> {
           ListView.builder(
             itemCount:
                 widget.sum > 0.0 ? widget.numberList.length + 1 : widget.numberList.length,
-            padding:
-                EdgeInsets.only(top: height * 0.33, left: width * 0.1, right: width * 0.1, bottom: 30),
+            padding: EdgeInsets.only(
+              top: height * 0.33,
+              left: width * 0.1,
+              right: width * 0.1,
+              bottom: _isBannerAdReady ? 70 : 30,
+            ),
             itemBuilder: (context, index) {
               if (widget.sum > 0.0) {
                 if (index == 0) {
@@ -443,23 +471,33 @@ class _ResultPageState extends State<ResultPage> {
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
-                              child: IconButton(
-                                iconSize: 20,
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(
-                                      text: widget.type == 'INTEGER'
-                                          ? widget.sum.toStringAsFixed(0)
-                                          : widget.sum.toString(),
-                                    ),
-                                  );
-                                  Fluttertoast.showToast(msg: 'Copied to Clipboard');
-                                },
-                                icon: Icon(
-                                  Icons.copy_outlined,
+                              child: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(
+                                        text: widget.type == 'INTEGER'
+                                            ? widget.sum.toStringAsFixed(0)
+                                            : widget.sum.toString(),
+                                      ),
+                                    );
+                                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                                  },
+                                  child: Icon(
+                                    Icons.copy_outlined,
+                                    size: 20,
+                                    color: Color.fromARGB(255, 243, 231, 113),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25)),
+                                    primary: Colors.transparent,
+                                    onPrimary: Colors.deepOrangeAccent,
+                                  ),
                                 ),
-                                color: Color.fromARGB(255, 243, 231, 113),
-                                splashRadius: 15,
                               ),
                             )
                           ],
@@ -517,22 +555,36 @@ class _ResultPageState extends State<ResultPage> {
                     ),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        iconSize: 20,
-                        onPressed: () {
-                          Clipboard.setData(
-                            ClipboardData(
+                      child: Container(
+                        height: 45,
+                        width: 45,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(
                                 text: widget.sum > 0.0
                                     ? _sortedList![index - 1].toString()
-                                    : _sortedList![index].toString(),),
-                          );
-                          Fluttertoast.showToast(msg: 'Copied to Clipboard');
-                        },
-                        icon: Icon(
-                          Icons.copy_outlined,
+                                    : _sortedList![index].toString(),
+                              ),
+                            );
+                            Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                          },
+                          child: Center(
+                            child: Icon(
+                              Icons.copy_outlined,
+                              size: 15,
+                              color: Color.fromARGB(255, 243, 231, 113),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            primary: Colors.transparent,
+                            onPrimary: Colors.grey,
+                          ),
                         ),
-                        color: Color.fromARGB(255, 243, 231, 113),
-                        splashRadius: 15,
+                        margin: EdgeInsets.all(5),
                       ),
                     )
                   ],
@@ -543,7 +595,10 @@ class _ResultPageState extends State<ResultPage> {
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
-              padding: EdgeInsets.only(bottom: height * 0.03, right: width * 0.05),
+              padding: EdgeInsets.only(
+                bottom: _isBannerAdReady ? height * 0.03 + 50 : height * 0.03,
+                right: width * 0.05,
+              ),
               child: SizedBox(
                 width: 150,
                 height: 35,
@@ -700,7 +755,10 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Original View',
                         style: GoogleFonts.roboto(
-                          fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                          fontSize: 14,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                       value: 'Original View',
                     ),
@@ -708,7 +766,10 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Ascending',
                         style: GoogleFonts.roboto(
-                            fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                          fontSize: 14,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                       value: 'Ascending',
                     ),
@@ -716,7 +777,10 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Descending',
                         style: GoogleFonts.roboto(
-                            fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                          fontSize: 14,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                       value: 'Descending',
                     ),
@@ -726,11 +790,11 @@ class _ResultPageState extends State<ResultPage> {
                     setState(() {
                       selectedValue = value as String;
                     });
-                    if(selectedValue=='Ascending'){
+                    if (selectedValue == 'Ascending') {
                       _sortedList?.sort();
-                    } else if (selectedValue=='Descending') {
+                    } else if (selectedValue == 'Descending') {
                       _sortedList = (_sortedList?..sort())?.reversed.toList();
-                    } else if (selectedValue=='Original View') {
+                    } else if (selectedValue == 'Original View') {
                       _sortedList = [...widget.numberList];
                     }
                   },
@@ -752,6 +816,15 @@ class _ResultPageState extends State<ResultPage> {
               ),
             ),
           ),
+          if (_isBannerAdReady)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: _bannerAd.size.width.toDouble(),
+                height: _bannerAd.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              ),
+            ),
         ],
       ),
     );

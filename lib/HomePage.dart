@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:random_expert/ResultPage.dart';
 import 'dart:math' as math;
 
 import 'package:simple_shadow/simple_shadow.dart';
+
+import 'AdHelper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -52,14 +55,41 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
+  late BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
+
   @override
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 300),
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+    _bannerAd.load();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
   }
 
   @override
@@ -417,7 +447,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           SingleChildScrollView(
             child: AnimatedContainer(
-              duration: Duration(seconds: 1),
+              duration: Duration(milliseconds: 300),
               padding: EdgeInsets.only(
                 top: height * _heightScale,
                 left: width * 0.05,
@@ -432,7 +462,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     Align(
                       alignment: Alignment.topLeft,
                       child: ScaleTransition(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.center,
                         scale: _animation,
                         child: Container(
                           width: width * 0.55,
@@ -1442,6 +1472,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
           ),
+          if (_isBannerAdReady)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: _bannerAd.size.width.toDouble(),
+                height: _bannerAd.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              ),
+            ),
         ],
       ),
     );
