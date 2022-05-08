@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:random_expert/HomePage.dart';
+import 'package:random_expert/OpenSplash.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: OpenSplash(),
     );
   }
 }

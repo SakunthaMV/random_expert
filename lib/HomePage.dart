@@ -829,7 +829,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     Container(
                       height: 80,
-                      margin: EdgeInsets.symmetric(vertical: 10),
+                      margin: EdgeInsets.only(top: 10, bottom: 30),
                       padding: EdgeInsets.only(left: 20, right: 15),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 224, 250, 153),
@@ -929,115 +929,126 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    Container(
-                      height: 80,
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      padding: EdgeInsets.only(left: 20, right: 15),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 224, 250, 153),
-                        borderRadius: BorderRadius.circular(40),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.35),
-                            blurRadius: 4,
-                            spreadRadius: -1,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 35,
+                        width: 200,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 169, 201, 81),
+                          borderRadius: BorderRadius.circular(40),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.35),
+                              blurRadius: 4,
+                              spreadRadius: -1,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'REPETITION',
+                              style: GoogleFonts.openSans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    blurRadius: 4.0,
+                                    offset: Offset(0.5, 1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Transform.scale(
+                              scale: 1.1,
+                              child: Checkbox(
+                                value: _repetitionChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _repetitionChecked = value!;
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                activeColor: Colors.white,
+                                checkColor: Colors.black,
+                                side: BorderSide(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'REPETITION',
-                                style: GoogleFonts.openSans(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black.withOpacity(0.4),
-                                      blurRadius: 4.0,
-                                      offset: Offset(0.5, 1),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: 30,
-                                width: width * 0.3,
-                                child: Transform.scale(
-                                  scale: 1.4,
-                                  child: Checkbox(
-                                    value: _repetitionChecked,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _repetitionChecked = value!;
-                                      });
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    activeColor: Colors.white,
-                                    checkColor: Colors.black,
-                                    side: BorderSide(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 35,
+                        width: 200,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 169, 201, 81),
+                          borderRadius: BorderRadius.circular(40),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.35),
+                              blurRadius: 4,
+                              spreadRadius: -1,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'SHOW SUM',
+                              style: GoogleFonts.openSans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    blurRadius: 4.0,
+                                    offset: Offset(0.5, 1),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'SHOW SUM',
-                                style: GoogleFonts.openSans(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
+                            ),
+                            Transform.scale(
+                              scale: 1.1,
+                              child: Checkbox(
+                                value: _sumChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _sumChecked = value!;
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                activeColor: Colors.white,
+                                checkColor: Colors.black,
+                                side: BorderSide(
                                   color: Colors.black,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black.withOpacity(0.4),
-                                      blurRadius: 4.0,
-                                      offset: Offset(0.5, 1),
-                                    ),
-                                  ],
+                                  width: 2,
                                 ),
                               ),
-                              Container(
-                                height: 30,
-                                width: width * 0.3,
-                                child: Transform.scale(
-                                  scale: 1.4,
-                                  child: Checkbox(
-                                    value: _sumChecked,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _sumChecked = value!;
-                                      });
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    activeColor: Colors.white,
-                                    checkColor: Colors.black,
-                                    side: BorderSide(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

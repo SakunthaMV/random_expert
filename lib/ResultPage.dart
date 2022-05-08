@@ -396,12 +396,8 @@ class _ResultPageState extends State<ResultPage> {
                         height: 75,
                         margin: const EdgeInsets.only(top: 10, bottom: 10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(25),
-                            bottomLeft: Radius.circular(25),
-                            bottomRight: Radius.circular(25),
-                          ),
+                          color: Color.fromARGB(255, 169, 201, 81),
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.2),
@@ -528,7 +524,7 @@ class _ResultPageState extends State<ResultPage> {
                             ClipboardData(
                                 text: widget.sum > 0.0
                                     ? _sortedList![index - 1].toString()
-                                    : _sortedList![index].toString()),
+                                    : _sortedList![index].toString(),),
                           );
                           Fluttertoast.showToast(msg: 'Copied to Clipboard');
                         },

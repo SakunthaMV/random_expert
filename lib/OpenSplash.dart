@@ -16,7 +16,7 @@ class _OpenSplashState extends State<OpenSplash> {
 
   @override
   void initState() {
-    Timer(Duration(milliseconds: 750), () {
+    Timer(Duration(milliseconds: 1000), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) {
