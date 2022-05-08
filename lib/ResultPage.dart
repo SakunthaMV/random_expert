@@ -29,6 +29,34 @@ class _ResultPageState extends State<ResultPage> {
   late BannerAd _bannerAd;
   bool _isBannerAdReady = false;
 
+  InterstitialAd? _interstitialAd;
+  bool _isInterstitialAdReady = false;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitIdTwo,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              _interstitialAd!.dispose();
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     _sortedList = [...widget.numberList];
@@ -50,7 +78,15 @@ class _ResultPageState extends State<ResultPage> {
       ),
     );
     _bannerAd.load();
+    _loadInterstitialAd();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    _interstitialAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -611,6 +647,9 @@ class _ResultPageState extends State<ResultPage> {
                       ),
                     );
                     Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                    if (_isInterstitialAdReady) {
+                      _interstitialAd?.show();
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

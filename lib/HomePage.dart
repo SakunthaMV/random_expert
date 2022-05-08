@@ -58,6 +58,34 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late BannerAd _bannerAd;
   bool _isBannerAdReady = false;
 
+  InterstitialAd? _interstitialAd;
+  bool _isInterstitialAdReady = false;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              _interstitialAd!.dispose();
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     _animationController = AnimationController(
@@ -83,12 +111,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
     _bannerAd.load();
+    _loadInterstitialAd();
     super.initState();
   }
 
   @override
   void dispose() {
     _bannerAd.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -1298,6 +1328,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         if (_sumChecked) {
                           if (_items > 1) {
                             if (_numberList.isNotEmpty) {
+                              if(_numberList.length>5){
+                                if (_isInterstitialAdReady) {
+                                  _interstitialAd?.show();
+                                }
+                              }
                               _numberList.forEach((element) => sum += element);
                               Navigator.of(context).pushReplacement(
                                 PageTransition(
@@ -1326,6 +1361,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         } else {
                           if (_items > 1) {
                             if (_numberList.isNotEmpty) {
+                              if(_numberList.length>5){
+                                if (_isInterstitialAdReady) {
+                                  _interstitialAd?.show();
+                                }
+                              }
                               Navigator.of(context).pushReplacement(
                                 PageTransition(
                                   child: ResultPage(
@@ -1396,6 +1436,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         if (_sumChecked) {
                           if (_items > 1) {
                             if (_decimalList.isNotEmpty) {
+                              if(_decimalList.length>5){
+                                if (_isInterstitialAdReady) {
+                                  _interstitialAd?.show();
+                                }
+                              }
                               _decimalList.forEach((element) => decimalSum += element);
                               Navigator.of(context).pushReplacement(
                                 PageTransition(
@@ -1424,6 +1469,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         } else {
                           if (_items > 1) {
                             if (_decimalList.isNotEmpty) {
+                              if(_decimalList.length>5){
+                                if (_isInterstitialAdReady) {
+                                  _interstitialAd?.show();
+                                }
+                              }
                               Navigator.of(context).pushReplacement(
                                 PageTransition(
                                   child: ResultPage(
