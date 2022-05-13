@@ -476,6 +476,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ],
           ),
           SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: _isBannerAdReady? 60:0),
             child: AnimatedContainer(
               duration: Duration(milliseconds: 300),
               padding: EdgeInsets.only(
