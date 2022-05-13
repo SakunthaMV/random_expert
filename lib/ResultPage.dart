@@ -385,8 +385,8 @@ class _ResultPageState extends State<ResultPage> {
           ListView.builder(
             itemCount:
                 widget.sum > 0.0 ? widget.numberList.length + 1 : widget.numberList.length,
-            padding:
-                EdgeInsets.only(top: height * 0.33, left: width * 0.1, right: width * 0.1, bottom: 30),
+            padding: EdgeInsets.only(
+                top: height * 0.33, left: width * 0.1, right: width * 0.1, bottom: 30),
             itemBuilder: (context, index) {
               if (widget.sum > 0.0) {
                 if (index == 0) {
@@ -416,52 +416,63 @@ class _ResultPageState extends State<ResultPage> {
                                 fit: BoxFit.scaleDown,
                                 child: RichText(
                                   text: TextSpan(
-                                      style: TextStyle(
-                                        fontSize: 50,
-                                        color: Colors.black,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black.withOpacity(0.4),
-                                            blurRadius: 3,
-                                            offset: Offset(1, 1),
-                                          ),
-                                        ],
+                                    style: TextStyle(
+                                      fontSize: 50,
+                                      color: Colors.black,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black.withOpacity(0.4),
+                                          blurRadius: 3,
+                                          offset: Offset(1, 1),
+                                        ),
+                                      ],
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: 'SUM = ',
+                                        style: GoogleFonts.droidSerif(),
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: 'SUM = ',
-                                          style: GoogleFonts.droidSerif(),
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              '${widget.type == 'INTEGER' ? widget.sum.toStringAsFixed(0) : widget.sum}',
-                                          style: GoogleFonts.oldStandardTt(),
-                                        ),
-                                      ]),
+                                      TextSpan(
+                                        text:
+                                            '${widget.type == 'INTEGER' ? widget.sum.toStringAsFixed(0) : widget.sum}',
+                                        style: GoogleFonts.oldStandardTt(),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
-                              child: IconButton(
-                                iconSize: 20,
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(
-                                      text: widget.type == 'INTEGER'
-                                          ? widget.sum.toStringAsFixed(0)
-                                          : widget.sum.toString(),
-                                    ),
-                                  );
-                                  Fluttertoast.showToast(msg: 'Copied to Clipboard');
-                                },
-                                icon: Icon(
-                                  Icons.copy_outlined,
+                              child: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(
+                                        text: widget.type == 'INTEGER'
+                                            ? widget.sum.toStringAsFixed(0)
+                                            : widget.sum.toString(),
+                                      ),
+                                    );
+                                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                                  },
+                                  child: Icon(
+                                    Icons.copy_outlined,
+                                    size: 20,
+                                    color: Color.fromARGB(255, 243, 231, 113),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25)),
+                                    primary: Colors.transparent,
+                                    onPrimary: Colors.deepOrangeAccent,
+                                  ),
                                 ),
-                                color: Color.fromARGB(255, 243, 231, 113),
-                                splashRadius: 15,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -517,24 +528,38 @@ class _ResultPageState extends State<ResultPage> {
                     ),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        iconSize: 20,
-                        onPressed: () {
-                          Clipboard.setData(
-                            ClipboardData(
+                      child: Container(
+                        width: 45,
+                        height: 45,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(
                                 text: widget.sum > 0.0
                                     ? _sortedList![index - 1].toString()
-                                    : _sortedList![index].toString(),),
-                          );
-                          Fluttertoast.showToast(msg: 'Copied to Clipboard');
-                        },
-                        icon: Icon(
-                          Icons.copy_outlined,
+                                    : _sortedList![index].toString(),
+                              ),
+                            );
+                            Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                          },
+                          child: Center(
+                            child: Icon(
+                              Icons.copy_outlined,
+                              size: 15,
+                              color: Color.fromARGB(255, 243, 231, 113),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            primary: Colors.transparent,
+                            onPrimary: Colors.grey,
+                          ),
                         ),
-                        color: Color.fromARGB(255, 243, 231, 113),
-                        splashRadius: 15,
+                        margin: EdgeInsets.all(5),
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -700,7 +725,10 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Original View',
                         style: GoogleFonts.roboto(
-                          fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                          fontSize: 14,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                       value: 'Original View',
                     ),
@@ -708,7 +736,10 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Ascending',
                         style: GoogleFonts.roboto(
-                            fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                          fontSize: 14,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                       value: 'Ascending',
                     ),
@@ -716,7 +747,10 @@ class _ResultPageState extends State<ResultPage> {
                       child: Text(
                         'Descending',
                         style: GoogleFonts.roboto(
-                            fontSize: 14, color: Colors.black, letterSpacing: 1.2,),
+                          fontSize: 14,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                       value: 'Descending',
                     ),
@@ -726,11 +760,11 @@ class _ResultPageState extends State<ResultPage> {
                     setState(() {
                       selectedValue = value as String;
                     });
-                    if(selectedValue=='Ascending'){
+                    if (selectedValue == 'Ascending') {
                       _sortedList?.sort();
-                    } else if (selectedValue=='Descending') {
+                    } else if (selectedValue == 'Descending') {
                       _sortedList = (_sortedList?..sort())?.reversed.toList();
-                    } else if (selectedValue=='Original View') {
+                    } else if (selectedValue == 'Original View') {
                       _sortedList = [...widget.numberList];
                     }
                   },

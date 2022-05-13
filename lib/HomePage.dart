@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 300),
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     super.initState();
@@ -417,7 +417,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           SingleChildScrollView(
             child: AnimatedContainer(
-              duration: Duration(seconds: 1),
+              duration: Duration(milliseconds: 300),
               padding: EdgeInsets.only(
                 top: height * _heightScale,
                 left: width * 0.05,
@@ -432,7 +432,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     Align(
                       alignment: Alignment.topLeft,
                       child: ScaleTransition(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.center,
                         scale: _animation,
                         child: Container(
                           width: width * 0.55,
