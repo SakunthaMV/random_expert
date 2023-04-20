@@ -9,3 +9,5 @@ With Random Expert, you can generate random numbers according to your preference
 Random Expert is perfect for a wide range of applications, including simulations, statistical analysis, and random sampling. Whether you are a student, a researcher, or a hobbyist, Random Expert is the ideal tool for generating random numbers quickly and efficiently.
 
 Try Random Expert today and experience the power of a truly versatile random number generator app!
+
+ **Download** :- [**Random Expert**](https://github.com/SakunthaMV/random_expert/releases/latest)
